@@ -2,12 +2,11 @@ import React from "react";
 import Image from "next/image";
 import Frame81 from "@/public/img/HomePage/Frame81.svg";
 
-
 export const GrowWithFriends = () => {
   return (
     <section className="w-full flex flex-col lg:flex-row items-center gap-15 px-6 py-10">
       {/* Image Section */}
-      <div className="flex justify-center w-full lg:w-auto">
+      <div className="flex justify-center w-full lg:w-auto order-1 lg:order-1">
         <Image
           src={Frame81}
           alt="Train under fire illustration"
@@ -18,7 +17,7 @@ export const GrowWithFriends = () => {
       </div>
 
       {/* Text Section */}
-      <div className="text-center lg:text-left max-w-2xl">
+      <div className="text-center lg:text-left max-w-2xl order-2 lg:order-2">
         <h1 className="font-black_han text-3xl sm:text-4xl  leading-tight">
           Grow with friends
         </h1>
