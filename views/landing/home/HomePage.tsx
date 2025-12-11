@@ -7,6 +7,7 @@ import { WhyWorkingHard } from "./sections/WhyWorkingHard";
 import { TrainUnderFire } from "./sections/TrainUnderFire";
 import { WhatYouAreMissing } from "./sections/WhatYouAreMissing";
 import { GrowWithFriends } from "./sections/GrowWithFriends";
+import { ExplorePastQuest } from "./sections/ExplorePastQuest";
 import { JambQuestion } from "./sections/JambQuestion";
 import { Testimony } from "./sections/Testimony";
 import { Pricing } from "./sections/Pricing";
@@ -18,15 +19,16 @@ const HomePage = () => {
     <div>
       <Navbar />
       <div className="">
-      <PrepareBetter />
-      <LearningMonitor />
-      <TrustedByStudent />
-      <WhyWorkingHard />
-      <TrainUnderFire />
-      <WhatYouAreMissing />
-      <GrowWithFriends />
-      <JambQuestion />
-      <Testimony />
+        <PrepareBetter />
+        <LearningMonitor />
+        <TrustedByStudent />
+        <WhyWorkingHard />
+        <TrainUnderFire />
+        <WhatYouAreMissing />
+        <GrowWithFriends />
+        <ExplorePastQuest />
+        <JambQuestion />
+        <Testimony />
         <Pricing />
       </div>
 

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { TestimonyCard } from "@/components/reusable/TestimonyCard";
+import Button from "@/components/ui/button";
 
 const testimonies = [
   {
@@ -82,7 +83,7 @@ export const Testimony = () => {
 
   const scroll = (direction: "left" | "right") => {
     if (carouselRef.current) {
-      const scrollAmount = 400; // scroll distance per click
+      const scrollAmount = 400;
       const newScrollLeft =
         direction === "left"
           ? carouselRef.current.scrollLeft - scrollAmount
@@ -95,29 +96,43 @@ export const Testimony = () => {
     }
   };
 
+  // Auto-scroll removed — carousel is now manual only
+
   return (
-    <section className="w-full bg-black py-16">
+    <section
+      className="
+        relative w-full py-16
+        bg-black
+        bg-[url('../public/img/HomePage/dots-example.png')]
+        bg-cover bg-center bg-no-repeat
+      "
+    >
+      {/* BACKGROUND OVERLAY */}
+      <div className="absolute inset-0 bg-black/5"></div>
+
       {/* HEADER + ARROWS */}
-      <div className="px-6 mb-12 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6 max-w-7xl mx-auto">
+      <div className="relative z-10 px-6 mb-12 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6 max-w-7xl mx-auto">
         <h1 className="font-black_han text-3xl sm:text-4xl lg:text-5xl text-center sm:text-left leading-tight text-white">
           Hear it from our students
         </h1>
 
         {/* ARROWS — centered on mobile, right-aligned on desktop */}
-        <div className="flex items-center gap-6 justify-center sm:justify-end w-full sm:w-auto">
-          <button
+        <div className="flex items-center gap-4 justify-center sm:justify-end w-full sm:w-auto">
+          <Button
             onClick={() => scroll("left")}
-            className="p-2 rounded-full bg-neutral-800 border border-neutral-600 hover:border-neutral-400 transition"
+            isIconOnly
+            className="rounded-full p-3 bg-black/20 hover:bg-black/40 border border-white/30 hover:border-white/50 transition backdrop-blur-md"
           >
-            <ArrowLeftIcon className="h-6 w-6 text-neutral-200" />
-          </button>
+            <ArrowLeftIcon className="h-5 w-5 text-white" />
+          </Button>
 
-          <button
+          <Button
             onClick={() => scroll("right")}
-            className="p-2 rounded-full bg-neutral-800 border border-neutral-600 hover:border-neutral-400 transition"
+            isIconOnly
+            className="rounded-full p-3 bg-black/20 hover:bg-black/40 border border-white/30 hover:border-white/50 transition backdrop-blur-md"
           >
-            <ArrowRightIcon className="h-6 w-6 text-neutral-200" />
-          </button>
+            <ArrowRightIcon className="h-5 w-5 text-white" />
+          </Button>
         </div>
       </div>
 

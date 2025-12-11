@@ -3,7 +3,6 @@ import Image from "next/image";
 import Missing from "@/public/img/HomePage/Missing.svg";
 
 export const WhatYouAreMissing = () => {
-
   return (
     <section className="w-full flex flex-col lg:flex-row items-center gap-15 px-6 py-10">
       {/* Text Section */}
@@ -25,7 +24,7 @@ export const WhatYouAreMissing = () => {
           alt="Train under fire illustration"
           width={704}
           height={480}
-          className="w-full max-w-[704px] h-auto"
+          className="w-full max-w-[704px] lg:max-w-[850px] h-auto"
         />
       </div>
     </section>

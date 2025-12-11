@@ -9,18 +9,18 @@ export const TrainUnderFire = () => {
   return (
     <section className="w-full flex flex-col lg:flex-row items-center gap-10 px-6 py-10">
       {/* Image Section */}
-      <div className="flex justify-center w-full lg:w-auto">
+      <div className="flex justify-center w-full lg:w-auto order-2 lg:order-1">
         <Image
           src={Train}
           alt="Train under fire illustration"
           width={704}
           height={480}
-          className="w-full max-w-[704px] h-auto"
+          className="w-full max-w-[704px] lg:max-w-[850px] h-auto"
         />
       </div>
 
       {/* Text Section */}
-      <div className="text-center lg:text-left">
+      <div className="text-center lg:text-left order-1 lg:order-2">
         <h1 className="font-black_han text-3xl sm:text-4xl leading-tight">
           Train under fire.
         </h1>

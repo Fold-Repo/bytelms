@@ -1,17 +1,23 @@
-import React from 'react'
-import Image from 'next/image'
-import CelestailBlue from '@/public/img/HomePage/Celestial-Blue.svg'
+import React from "react";
+import Image from "next/image";
+import CelestailBlue from "@/public/img/HomePage/Celestial-Blue.png";
 
 export const LearningMonitor = () => {
   return (
-    <div className="w-full grid place-items-center py-4 rounded-lg bg-white">
-      <Image
-        src={CelestailBlue}
-        alt="monitor view"
-        width={300}
-        height={300}
-        className="w-auto h-auto"
-      />
-    </div>
+    <section className="py-12">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="mx-auto w-full max-w-[920px]">
+          <div className="relative w-full">
+            <Image
+              src={CelestailBlue}
+              alt="monitor view"
+              width={920}
+              height={540}
+              className="w-full h-auto block"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
   );
-}
+};
