@@ -63,14 +63,15 @@ const Navbar = () => {
                     </Link>
                   </div>
                 ) : (
-                  <div key={btn.href} className="hidden md:block">
-                    <Button
-                      className="px-6 py-2 bg-yellow-400"
-
-                    >
+                  <Link
+                    key={btn.href}
+                    href={btn.href}
+                    className="hidden md:block"
+                  >
+                    <Button className="px-6 py-2 bg-yellow-400">
                       {btn.label}
                     </Button>
-                  </div>
+                  </Link>
                 )
               )}
 

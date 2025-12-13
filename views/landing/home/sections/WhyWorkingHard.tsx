@@ -7,7 +7,7 @@ export const WhyWorkingHard = () => {
   return (
     <section className="flex flex-col sm:flex-row items-center justify-between gap-10 mt-16 px-6 py-10 bg-[#E6E6FA] rounded-2xl">
       {/* TEXT SECTION */}
-      <div className="text-center sm:text-left max-w-lg">
+      <div className="text-center sm:text-left ">
         <h1 className="font-black_han text-3xl sm:text-4xl lg:text-5xl leading-tight mb-4">
           Why “working hard” isn’t enough.
         </h1>
