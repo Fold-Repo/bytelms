@@ -20,31 +20,36 @@ const sections: { title: string; items: ComponentDoc[] }[] = [
         name: "Button",
         importPath: `import { Button } from "@/components/ui";`,
         usage: `<Button color="primary" onPress={onClick}>Save</Button>`,
-        notes: "Wraps HeroUI Button; supports color/variant/loading/startContent/endContent.",
+        notes:
+          "Wraps HeroUI Button; supports color/variant/loading/startContent/endContent.",
       },
       {
         name: "Drawer",
         importPath: `import { Drawer, useDisclosure } from "@/components/ui";`,
         usage: `const {isOpen,onOpenChange,onOpen} = useDisclosure();\n<Drawer isOpen={isOpen} onOpenChange={onOpenChange} title="Filters">...</Drawer>`,
-        notes: "Placements: top/bottom/left/right; set footer/title/icon and close button visibility.",
+        notes:
+          "Placements: top/bottom/left/right; set footer/title/icon and close button visibility.",
       },
       {
         name: "MenuDropdown",
         importPath: `import { MenuDropdown } from "@/components/ui";`,
         usage: `<MenuDropdown items={[{key:"asc",label:"Ascending"}]} onChange={(k)=>setSort(k)} />`,
-        notes: "Accepts custom trigger or uses provided button with chevron; controlled via value/onChange.",
+        notes:
+          "Accepts custom trigger or uses provided button with chevron; controlled via value/onChange.",
       },
       {
         name: "PopupModal",
         importPath: `import { PopupModal } from "@/components/ui";`,
-        usage: `<PopupModal isOpen={open} onClose={close} title="Confirm" footer={<Actions/>}>Body</PopupModal>`,
-        notes: "Supports size, placement, custom header/body/footer classes, optional close button.",
+        usage: `<PopupModal isOpen={open}  showCloseButton={false} onClose={close} title="Confirm" footer={<Actions/>}>Body</PopupModal>`,
+        notes:
+          "Supports size, placement, custom header/body/footer classes, optional close button.",
       },
       {
         name: "Table primitives",
         importPath: `import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui";`,
         usage: `<Table><TableHeader><TableRow><TableHead>Col</TableHead></TableRow></TableHeader><TableBody>...</TableBody></Table>`,
-        notes: "Prefer the reusable TableComponent for real data tables; primitives stay for custom layouts.",
+        notes:
+          "Prefer the reusable TableComponent for real data tables; primitives stay for custom layouts.",
       },
     ],
   },
@@ -91,23 +96,26 @@ const sections: { title: string; items: ComponentDoc[] }[] = [
         name: "SearchInput",
         importPath: `import { SearchInput } from "@/components/reusable";`,
         usage: `<SearchInput onSearch={(value)=>setQuery(value)} debounceDelay={400} />`,
-        notes: "Debounces input before calling onSearch; customizable classes and icon.",
+        notes:
+          "Debounces input before calling onSearch; customizable classes and icon.",
       },
       {
         name: "Pagination",
         importPath: `import { Pagination } from "@/components/reusable";`,
         usage: `<Pagination currentPage={page} totalItems={total} itemsPerPage={20} onPageChange={setPage} />`,
-        notes: "Displays range text; customizable button labels and helper text.",
+        notes:
+          "Displays range text; customizable button labels and helper text.",
       },
       {
         name: "TableComponent",
         importPath: `import { TableComponent } from "@/components/reusable";`,
         usage: `<TableComponent columns={[{key:"name",title:"Name"}]} data={rows} rowKey={(r)=>r.id} renderRow={(row)=> (<><TableCell>{row.name}</TableCell></>)} withCheckbox onSelectionChange={setSelected} />`,
-        notes: "Composes table primitives with optional checkbox selection, skeleton/loading, and empty state.",
+        notes:
+          "Composes table primitives with optional checkbox selection, skeleton/loading, and empty state.",
       },
     ],
   },
-]
+];
 
 export const ComponentsView = () => {
   const { isOpen, onOpenChange, onOpen } = useDisclosure()
@@ -246,6 +254,7 @@ export const ComponentsView = () => {
 
       <PopupModal
         isOpen={isModalOpen}
+        showCloseButton={false}
         onClose={() => setModalOpen(false)}
         title="Sample modal"
         description="A quick look at PopupModal."
@@ -263,4 +272,3 @@ export const ComponentsView = () => {
     </div>
   )
 }
-

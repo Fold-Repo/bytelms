@@ -51,22 +51,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const isDev = process.env.NODE_ENV === 'development'
+  const isDev = process.env.NODE_ENV === "development";
 
   return (
     <html lang="en" suppressHydrationWarning>
-
-      <body className={`${isDev ? 'debug-screens' : ''}`}>
-
-        <Providers>
-
-          {children}
-
-        </Providers>
-
+      <body suppressHydrationWarning className={isDev ? "debug-screens" : ""}>
+        <Providers>{children}</Providers>
       </body>
-
     </html>
   );
 }
