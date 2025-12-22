@@ -1,135 +1,122 @@
-
 "use client";
 
 import React, { ReactNode, useState } from "react";
 import { cn } from "@/lib";
-import Label from "./Label";
 import ErrorMessage from "./ErrorMessage";
 import { sizeClasses, radiusClasses } from "./constants";
 
-interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
-    label?: string | ReactNode;
-    name: string;
-    className?: string;
-    formGroupClass?: string;
-    labelClassName?: string;
-    startContent?: ReactNode;
-    endContent?: ReactNode;
-    fullWidth?: boolean;
-    inputSize?: "sm" | "md" | "lg";
-    radius?: "none" | "sm" | "md" | "lg" | "xl" | "full";
-    innerShadow?: boolean;
-    error?: string;
-    value?: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-    isCurrency?: boolean;
-    type?: string
+interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
+  label?: string | ReactNode;
+  name: string;
+  className?: string;
+  formGroupClass?: string;
+  fullWidth?: boolean;
+  inputSize?: "sm" | "md" | "lg";
+  radius?: "none" | "sm" | "md" | "lg" | "xl" | "full";
+  error?: string;
+  startContent?: ReactNode;
+  endContent?: ReactNode;
+  isCurrency?: boolean;
 }
 
-
 const formatCurrency = (value: string) => {
-    const number = parseFloat(value.replace(/,/g, ""));
-    if (isNaN(number)) return "";
-    return number.toLocaleString();
+  const number = parseFloat(value.replace(/,/g, ""));
+  if (isNaN(number)) return "";
+  return number.toLocaleString();
 };
 
-const unformatCurrency = (value: string) => {
-    return value.replace(/,/g, "");
-};
+const unformatCurrency = (value: string) => value.replace(/,/g, "");
 
 const Input: React.FC<InputProps> = ({
-    label,
-    name,
-    className,
-    formGroupClass,
-    labelClassName,
-    startContent,
-    endContent,
-    fullWidth,
-    inputSize = "md",
-    radius = "md",
-    innerShadow = false,
-    error,
-    value,
-    onChange,
-    onBlur,
-    isCurrency = false,
-    type = "text",
-    ...props
+  label,
+  name,
+  className,
+  formGroupClass,
+  fullWidth,
+  inputSize = "md",
+  radius = "md",
+  error,
+  startContent,
+  endContent,
+  isCurrency = false,
+  value,
+  onChange,
+  ...props
 }) => {
-    const [displayValue, setDisplayValue] = useState(() => {
-        if (isCurrency && value) {
-            return formatCurrency(String(value));
-        }
-        return value ?? "";
-    });
+  const [displayValue, setDisplayValue] = useState(
+    isCurrency && value ? formatCurrency(String(value)) : value ?? ""
+  );
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let rawValue = e.target.value;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let rawValue = e.target.value;
 
-        if (isCurrency) {
-            rawValue = unformatCurrency(rawValue);
-            const formattedValue = formatCurrency(rawValue);
+    if (isCurrency) {
+      rawValue = unformatCurrency(rawValue);
+      setDisplayValue(formatCurrency(rawValue));
+      onChange?.({
+        ...e,
+        target: { ...e.target, value: rawValue, name },
+      });
+    } else {
+      onChange?.(e);
+    }
+  };
 
-            const syntheticEvent = {
-                ...e,
-                target: {
-                    ...e.target,
-                    value: rawValue,
-                    name: name
-                }
-            };
+  return (
+    <div
+      className={cn("relative w-full", formGroupClass, fullWidth && "w-full")}
+    >
+      {/* INPUT */}
+      <input
+        {...props}
+        id={name}
+        name={name}
+        placeholder=" "
+        value={isCurrency ? displayValue : value}
+        onChange={handleChange}
+        className={cn(
+          "peer form-control",
+          sizeClasses[inputSize],
+          radiusClasses[radius],
+          startContent && "pl-9",
+          endContent && "pr-9",
+          error && "is-invalid",
+          className
+        )}
+      />
 
-            onChange?.(syntheticEvent);
-            setDisplayValue(formattedValue);
-        } else {
-            onChange?.(e);
-        }
-    };
+      {/* FLOATING LABEL */}
+      {label && (
+        <label
+          htmlFor={name}
+          className={cn(
+            "absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 bg-transparent px-1 pointer-events-none transition-all duration-200",
+            "peer-focus:top-0 peer-focus:text-xs peer-focus:-translate-y-0",
+            "peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:-translate-y-0"
+          )}
+        >
+          {label}
+        </label>
+      )}
 
-    const inputValue = isCurrency ? displayValue : value;
-
-    return (
-        <div className={cn("form-group", formGroupClass, fullWidth && "w-full")}>
-
-            {label && <Label htmlFor={name} label={label} className={labelClassName} />}
-
-            <div className="relative w-full">
-                {startContent && (
-                    <div className="absolute left-3 inset-y-0 flex items-center">
-                        {startContent}
-                    </div>
-                )}
-
-                <input
-                    {...props}
-                    type={type}
-                    id={name}
-                    name={name}
-                    value={type !== "file" ? inputValue : undefined}
-                    onChange={handleChange}
-                    onBlur={onBlur}
-                    className={cn(
-                        "form-control",
-                        sizeClasses[inputSize],
-                        radiusClasses[radius],
-                        startContent ? "pl-9" : "",
-                        endContent ? "pr-9" : "",
-                        error && "is-invalid",
-                        className
-                    )}
-                />
-
-                {endContent && (
-                    <div className="absolute right-3 inset-y-0 flex items-center">{endContent}</div>
-                )}
-
-            </div>
-
-            <ErrorMessage error={error} />
+      {/* ICONS */}
+      {startContent && (
+        <div className="absolute left-3 inset-y-0 flex items-center">
+          {startContent}
         </div>
-    );
+      )}
+
+      {endContent && (
+        <div className="absolute right-3 inset-y-0 flex items-center">
+          {endContent}
+        </div>
+      )}
+
+      {/* ERROR */}
+      <ErrorMessage error={error} />
+    </div>
+  );
 };
 
 export default Input;

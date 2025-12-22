@@ -1,21 +1,36 @@
-import { SignupTyped } from "@/views/auth/signup";
-import AuthHeader from "@/components/auth/AuthHeader";
+import { SignUpPage } from "@/views/auth/signup";
+import FormLeftSide from "@/components/auth/FormLeftSide";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
-  title: "Sign Up | TestCube",
-  description: "Create your TestCube account",
+  title: "Sign up | TestCube",
+  description: "Sign up to your TestCube account",
 };
 
-export default function SignUpPage() {
+export default function SignUp() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 px-4">
-      <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full">
-        <AuthHeader
-          title="Create your account"
-          description="Sign up for TestCube"
-        />
-        <SignupTyped />
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full flex flex-col lg:flex-row">
+        {/* FormLeftSide with deep blue background */}
+        <div className="lg:flex-1 p-8 lg:p-12 flex items-center justify-center bg-[url('/img/auth/Background.png')] bg-cover bg-center bg-no-repeat">
+          <FormLeftSide
+            title="Build the confidence to ace your exams."
+            description="Master WAEC, JAMB & IELTS with unlimited past questions, instant corrections, and detailed performance tracking."
+          />
+        </div>
+
+        {/* Login Form */}
+        <div className="lg:flex-1 p-8 lg:p-12 flex items-center justify-center">
+          <div className="w-full max-w-md">
+            <SignUpPage />
+          </div>
+        </div>
       </div>
+      <ToastContainer
+        icon={false}
+        closeButton={false}
+        hideProgressBar={false}
+      />
     </div>
   );
 }

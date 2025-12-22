@@ -1,10 +1,8 @@
-import SignUpView from './signup'
-import VerificationView from './verification'
-import LoginView from './LoginView'
+import { SignUpPage }  from './signup'
+import { Login } from './login'
+
 
 export {
-    SignUpView,
-    VerificationView,
-    LoginView,
-
+    SignUpPage,
+    Login,
 }

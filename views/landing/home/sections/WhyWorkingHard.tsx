@@ -1,3 +1,6 @@
+"use client";
+
+
 import Image from "next/image";
 import Frame16 from "@/public/img/HomePage/Frame16.png";
 import { XMarkIcon } from "@heroicons/react/24/solid";

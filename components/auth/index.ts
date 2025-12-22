@@ -1,5 +1,5 @@
 import AuthRedirect from './AuthRedirect'
-import AuthHeader from './AuthHeader'
+import AuthHeader from './FormLeftSide'
 
 export {
     AuthRedirect,

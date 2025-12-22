@@ -3,13 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { LOGO } from "@/constants";
 
-interface AuthHeaderProps {
+interface FormLeftSideProps {
   title: string;
   description?: string;
   className?: string;
 }
 
-const AuthHeader: React.FC<AuthHeaderProps> = ({
+const FormLeftSide: React.FC<FormLeftSideProps> = ({
   title,
   description,
   className = "",
@@ -26,7 +26,7 @@ const AuthHeader: React.FC<AuthHeaderProps> = ({
         </h2>
 
         {description && (
-          <p className="text-lg lg:text-xl text-blue-100 leading-relaxed max-w-md mx-auto">
+          <p className="text-lg lg:text-xl text-blue-100 leading-relaxed ">
             {description}
           </p>
         )}
@@ -45,4 +45,4 @@ const AuthHeader: React.FC<AuthHeaderProps> = ({
   );
 };
 
-export default AuthHeader;
+export default FormLeftSide;

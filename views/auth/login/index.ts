@@ -1,1 +1,1 @@
-export { LoginTyped } from "./LoginTyped";
+export { Login } from "./Login";
