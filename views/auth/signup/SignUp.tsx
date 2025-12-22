@@ -22,6 +22,27 @@ export const SignUpPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
 
+  const [isEditingEmail, setIsEditingEmail] = React.useState(false);
+  const [emailInput, setEmailInput] = React.useState(submittedEmail);
+
+  const [otp, setOtp] = React.useState(Array(6).fill(""));
+  const inputRefs = React.useRef([]);
+
+  const handleOtpChange = (value, index) => {
+    if (!/^\d?$/.test(value)) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    // Move to next input
+    if (value && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const isOtpComplete = otp.every((digit) => digit !== "");
+
   // ✅ ONE useForm
   const {
     register,
@@ -48,17 +69,16 @@ export const SignUpPage = () => {
     number: /\d/.test(passwordValue),
   };
 
- const onSubmit = async (data: FormValues) => {
-  console.log("FORM DATA:", data);
+  const onSubmit = async (data: FormValues) => {
+    console.log("FORM DATA:", data);
 
-  await new Promise((res) => setTimeout(res, 1500));
+    await new Promise((res) => setTimeout(res, 1500));
 
-  setSubmittedEmail(data.email); // ✅ store email
-  setShowModal(true);           // ✅ open modal
+    setSubmittedEmail(data.email); // ✅ store email
+    setShowModal(true); // ✅ open modal
 
-  reset(); // optional
-};
-
+    reset(); // optional
+  };
 
   const handleGoogleSignIn = () => {
     toast.info("Redirecting to Google...");
@@ -90,7 +110,10 @@ export const SignUpPage = () => {
 
       <PopupModal
         isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        onClose={() => {
+          setShowModal(false);
+          setIsEditingEmail(false);
+        }}
         size="md"
         showCloseButton={false}
       >
@@ -133,45 +156,98 @@ export const SignUpPage = () => {
           </p>
 
           {/* EMAIL + CHANGE */}
-          <div className="mt-3 flex flex-col items-center justify-center mx-auto gap-2 w-80 bg-[#FAFAFC]  px-6 py-1.5 rounded-md">
-            <span className="text-base font-medium">{submittedEmail}</span>
+          <div className="mt-3 flex flex-col items-center justify-center mx-auto gap-2 w-80 bg-[#FAFAFC] px-6 py-1.5 rounded-md">
+            {isEditingEmail ? (
+              <>
+                <input
+                  type="email"
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  className="w-full px-3 py-1 border border-gray-300 rounded"
+                  placeholder="Enter your email"
+                />
+                <div className="flex gap-3 mt-2">
+                  <button
+                    onClick={() => {
+                      // validate email if you want
+                      setSubmittedEmail(emailInput);
+                      setIsEditingEmail(false);
+                      // optionally resend code here
+                    }}
+                    className="text-indigo-500 font-medium"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEmailInput(submittedEmail);
+                      setIsEditingEmail(false);
+                    }}
+                    className="text-gray-500 font-medium"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <span className="text-base font-medium">{submittedEmail}</span>
 
-            <button
-              onClick={() => setShowModal(false)}
-              className="text-indigo-500 text-xs flex items-center gap-1"
-            >
-              ✎ Change
-            </button>
+                <button
+                  onClick={() => setIsEditingEmail(true)}
+                  className="text-indigo-500 text-xs flex items-center gap-1"
+                >
+                  ✎ Change
+                </button>
+              </>
+            )}
           </div>
 
           {/* OTP CONTAINER */}
           <div className="flex justify-center mt-5">
-            <div className="flex items-center gap-3 px-4 py-3 border border-gray-300 rounded-2xl w-fit">
-              {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              className={`
+      flex items-center gap-3 px-4 py-3 rounded-2xl w-fit
+      transition-colors
+      ${isOtpComplete ? "border border-green-500" : "border border-gray-300"}
+    `}
+            >
+              {otp.map((digit, i) => (
                 <div key={i} className="relative w-8 h-10">
+                  {/* Invisible Input */}
                   <input
+                    ref={(el) => (inputRefs.current[i] = el)}
                     type="text"
-                    maxLength={1}
                     inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(e.target.value, i)}
                     className="
             absolute inset-0
             w-full h-full
-            
-            bg-transparent
-            outline-none
-            focus:outline-none
+            opacity-0
+            cursor-pointer
           "
                   />
 
-                  {/* DOT */}
+                  {/* Display Layer */}
                   <div
-                    className="
+                    className={`
             w-full h-full
-            flex items-center justify-center
-            pointer-events-none
-          "
+            flex items-center justify-center`}
                   >
-                    <span className="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
+                    {digit ? (
+                      <span
+                        className={`
+                text-lg font-semibold
+                ${isOtpComplete ? "text-green-600" : "text-gray-800"}
+              `}
+                      >
+                        {digit}
+                      </span>
+                    ) : (
+                      <span className="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
+                    )}
                   </div>
                 </div>
               ))}
@@ -179,7 +255,7 @@ export const SignUpPage = () => {
           </div>
 
           {/* RESEND */}
-          <p className="text-xs text-gray-500 mt-4">
+          <p className="text-xs text-gray-500 my-8">
             Didn’t get your code?
             <button className="text-indigo-500 font-medium hover:underline">
               Send a new code
