@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
-import { useState } from "react";
-import { Button, Input, PopupModal } from "@/components";
-import Link from "next/link";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
 import { useForm, useWatch } from "react-hook-form";
+import { Button, Input, PopupModal } from "@/components";
 import { PasswordInput } from "../../../components/PasswordInput";
 import { PasswordValidationRow } from "../../../components/PasswordValidationRow";
 
@@ -21,52 +20,55 @@ type FormValues = {
 export const SignUpPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [emailInput, setEmailInput] = useState(submittedEmail);
+  const [otp, setOtp] = useState(Array(6).fill(""));
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const [isEditingEmail, setIsEditingEmail] = React.useState(false);
-  const [emailInput, setEmailInput] = React.useState(submittedEmail);
-
-  const [otp, setOtp] = React.useState(Array(6).fill(""));
-  const inputRefs = React.useRef([]);
-
-  const handleOtpChange = (value, index) => {
+  // OTP handler
+  const handleOtpChange = (value: string, index: number) => {
     if (!/^\d?$/.test(value)) return;
 
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Move to next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
-
   const isOtpComplete = otp.every((digit) => digit !== "");
 
-  // ✅ ONE useForm
+  // React Hook Form
   const {
     register,
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
     control,
+    setValue,
     reset,
   } = useForm<FormValues>({
     mode: "onChange",
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    },
   });
 
-  // ✅ watch password
-  const passwordValue = useWatch({
-    control,
-    name: "password",
-    defaultValue: "",
-  });
+  // Watch form fields
+  const watchedFirstName = useWatch({ control, name: "firstName" });
+  const watchedLastName = useWatch({ control, name: "lastName" });
+  const watchedEmail = useWatch({ control, name: "email" });
+  const watchedPassword = useWatch({ control, name: "password" });
 
-  // ✅ password checks
+  // Password validation checks
   const passwordChecks = {
-    length: passwordValue.length >= 8,
-    uppercase: /[A-Z]/.test(passwordValue),
-    lowercase: /[a-z]/.test(passwordValue),
-    number: /\d/.test(passwordValue),
+    length: watchedPassword.length >= 8,
+    uppercase: /[A-Z]/.test(watchedPassword),
+    lowercase: /[a-z]/.test(watchedPassword),
+    number: /\d/.test(watchedPassword),
   };
 
   const onSubmit = async (data: FormValues) => {
@@ -74,10 +76,15 @@ export const SignUpPage = () => {
 
     await new Promise((res) => setTimeout(res, 1500));
 
-    setSubmittedEmail(data.email); // ✅ store email
-    setShowModal(true); // ✅ open modal
+    setSubmittedEmail(data.email);
+    setShowModal(true);
 
-    reset(); // optional
+    reset(); // Clear all form fields including password
+
+    // Also reset email input and OTP in modal
+    setEmailInput(data.email);
+    setOtp(Array(6).fill(""));
+    setIsEditingEmail(false);
   };
 
   const handleGoogleSignIn = () => {
@@ -102,12 +109,13 @@ export const SignUpPage = () => {
 
       <Button
         onPress={handleGoogleSignIn}
-        className="w-full flex items-center justify-center gap-3 border py-4 rounded-full bg-transparent"
+        className="w-full mx-auto flex items-center justify-center gap-3 bg-transparent border-2 border-gray-200 py-4 rounded-full font-medium font-sans text-lg"
       >
         <FcGoogle className="w-6 h-6" />
         Continue with Google
       </Button>
 
+      {/* Modal */}
       <PopupModal
         isOpen={showModal}
         onClose={() => {
@@ -120,22 +128,12 @@ export const SignUpPage = () => {
         {/* HEADER IMAGE */}
         <div
           className="relative h-[85px] w-full bg-no-repeat bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/img/auth/Polygon-15.png')",
-          }}
+          style={{ backgroundImage: "url('/img/auth/Polygon-15.png')" }}
         >
           {/* CLOSE BUTTON */}
           <button
             onClick={() => setShowModal(false)}
-            className="mt-3
-      absolute
-      top-1/2 left-1/2
-      -translate-x-1/2 -translate-y-1/2
-      transition
-      hover:scale-105
-      active:scale-95
-      focus:outline-none
-    "
+            className="mt-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition hover:scale-105 active:scale-95 focus:outline-none"
           >
             <Image
               src="/img/auth/Close-Button-Container.png"
@@ -169,10 +167,10 @@ export const SignUpPage = () => {
                 <div className="flex gap-3 mt-2">
                   <button
                     onClick={() => {
-                      // validate email if you want
+                      // You can add validation here if you want
                       setSubmittedEmail(emailInput);
                       setIsEditingEmail(false);
-                      // optionally resend code here
+                      // Optionally resend code here
                     }}
                     className="text-indigo-500 font-medium"
                   >
@@ -206,47 +204,39 @@ export const SignUpPage = () => {
           {/* OTP CONTAINER */}
           <div className="flex justify-center mt-5">
             <div
-              className={`
-      flex items-center gap-3 px-4 py-3 rounded-2xl w-fit
-      transition-colors
-      ${isOtpComplete ? "border border-green-500" : "border border-gray-300"}
-    `}
+              className={`flex items-center gap-3 px-4 py-3 rounded-2xl w-fit transition-colors ${
+                isOtpComplete
+                  ? "border border-green-500"
+                  : "border border-gray-300"
+              }`}
             >
               {otp.map((digit, i) => (
                 <div key={i} className="relative w-8 h-10">
                   {/* Invisible Input */}
                   <input
-                    ref={(el) => (inputRefs.current[i] = el)}
+                    ref={(el) => {
+                      inputRefs.current[i] = el;
+                    }}
                     type="text"
                     inputMode="numeric"
                     maxLength={1}
                     value={digit}
                     onChange={(e) => handleOtpChange(e.target.value, i)}
-                    className="
-            absolute inset-0
-            w-full h-full
-            opacity-0
-            cursor-pointer
-          "
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
 
                   {/* Display Layer */}
-                  <div
-                    className={`
-            w-full h-full
-            flex items-center justify-center`}
-                  >
+                  <div className="w-full h-full flex items-center justify-center">
                     {digit ? (
                       <span
-                        className={`
-                text-lg font-semibold
-                ${isOtpComplete ? "text-green-600" : "text-gray-800"}
-              `}
+                        className={`text-lg font-semibold ${
+                          isOtpComplete ? "text-green-600" : "text-gray-800"
+                        }`}
                       >
                         {digit}
                       </span>
                     ) : (
-                      <span className="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
                     )}
                   </div>
                 </div>
@@ -264,6 +254,7 @@ export const SignUpPage = () => {
         </div>
       </PopupModal>
 
+      {/* FORM */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <Input
@@ -271,6 +262,10 @@ export const SignUpPage = () => {
             className="bg-transparent"
             {...register("firstName", { required: "First name is required" })}
             error={errors.firstName?.message}
+            value={watchedFirstName}
+            onChange={(e) =>
+              setValue("firstName", e.target.value, { shouldValidate: true })
+            }
           />
 
           <Input
@@ -278,8 +273,13 @@ export const SignUpPage = () => {
             className="bg-transparent"
             {...register("lastName", { required: "Last name is required" })}
             error={errors.lastName?.message}
+            value={watchedLastName}
+            onChange={(e) =>
+              setValue("lastName", e.target.value, { shouldValidate: true })
+            }
           />
         </div>
+
         <Input
           label="Email Address"
           className="bg-transparent"
@@ -292,11 +292,20 @@ export const SignUpPage = () => {
             },
           })}
           error={errors.email?.message}
+          value={watchedEmail}
+          onChange={(e) =>
+            setValue("email", e.target.value, { shouldValidate: true })
+          }
         />
 
         <PasswordInput
           label="Password"
           className="mt-5"
+          value={watchedPassword}
+          onChange={(e) =>
+            setValue("password", e.target.value, { shouldValidate: true })
+          }
+          error={errors.password?.message}
           register={register("password", {
             required: "Password is required",
             minLength: {
@@ -311,11 +320,9 @@ export const SignUpPage = () => {
               number: (v) => /\d/.test(v) || "Must contain a number",
             },
           })}
-          error={errors.password?.message}
         />
 
-        {/* Password rules UI */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-6">
           <PasswordValidationRow
             label="At least 8 characters"
             isValid={passwordChecks.length}

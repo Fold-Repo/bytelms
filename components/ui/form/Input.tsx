@@ -1,12 +1,16 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { cn } from "@/lib";
 import ErrorMessage from "./ErrorMessage";
 import { sizeClasses, radiusClasses } from "./constants";
 
 interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    "size" | "value" | "defaultValue"
+  > {
+  value?: string | number;
   label?: string | ReactNode;
   name: string;
   className?: string;
@@ -44,9 +48,23 @@ const Input: React.FC<InputProps> = ({
   onChange,
   ...props
 }) => {
-  const [displayValue, setDisplayValue] = useState(
-    isCurrency && value ? formatCurrency(String(value)) : value ?? ""
-  );
+  const [isFocused, setIsFocused] = useState(false);
+  const [displayValue, setDisplayValue] = useState<string>("");
+
+  // Sync display value
+  useEffect(() => {
+    if (isCurrency) {
+      setDisplayValue(
+        value !== undefined && value !== null
+          ? formatCurrency(String(value))
+          : ""
+      );
+    } else {
+      setDisplayValue(
+        value !== undefined && value !== null ? String(value) : ""
+      );
+    }
+  }, [value, isCurrency]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let rawValue = e.target.value;
@@ -59,24 +77,30 @@ const Input: React.FC<InputProps> = ({
         target: { ...e.target, value: rawValue, name },
       });
     } else {
+      setDisplayValue(rawValue);
       onChange?.(e);
     }
   };
+
+  // ✅ SAFE label logic (FIXED)
+  const isActive =
+    isFocused || (displayValue !== undefined && displayValue !== "");
 
   return (
     <div
       className={cn("relative w-full", formGroupClass, fullWidth && "w-full")}
     >
-      {/* INPUT */}
       <input
         {...props}
         id={name}
         name={name}
-        placeholder=" "
-        value={isCurrency ? displayValue : value}
+        value={displayValue}
         onChange={handleChange}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        placeholder=" "
         className={cn(
-          "peer form-control",
+          "form-control bg-transparent",
           sizeClasses[inputSize],
           radiusClasses[radius],
           startContent && "pl-9",
@@ -86,34 +110,32 @@ const Input: React.FC<InputProps> = ({
         )}
       />
 
-      {/* FLOATING LABEL */}
       {label && (
         <label
           htmlFor={name}
           className={cn(
-            "absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 bg-transparent px-1 pointer-events-none transition-all duration-200",
-            "peer-focus:top-0 peer-focus:text-xs peer-focus:-translate-y-0",
-            "peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:-translate-y-0"
+            "absolute left-3 px-1 pointer-events-none transition-all duration-200 ease-out bg-[#F9F9F9]",
+            isActive
+              ? "-top-2 text-xs text-gray-700"
+              : "top-1/2 -translate-y-1/2 text-gray-400"
           )}
         >
           {label}
         </label>
       )}
 
-      {/* ICONS */}
       {startContent && (
-        <div className="absolute left-3 inset-y-0 flex items-center">
+        <div className="absolute left-3 inset-y-0 flex items-center pointer-events-none">
           {startContent}
         </div>
       )}
 
       {endContent && (
-        <div className="absolute right-3 inset-y-0 flex items-center">
+        <div className="absolute right-3 inset-y-0 flex items-center pointer-events-none">
           {endContent}
         </div>
       )}
 
-      {/* ERROR */}
       <ErrorMessage error={error} />
     </div>
   );
