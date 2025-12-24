@@ -230,7 +230,7 @@ export const Login = () => {
         {/* Forgot Password */}
         <div className="flex justify-end">
           <Link
-            href="/forgetPassword"
+            href="/forgetpassword"
             className="text-sm text-blue-600 hover:underline font-medium"
           >
             Forgot password?
@@ -246,7 +246,7 @@ export const Login = () => {
                 isDisabled={!isValid}
               >
                 Continue
-              </Button>
+        </Button>
 
         {/* Sign up */}
         <div className="text-center text-lg font-sans font-medium flex justify-center gap-2">
