@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -11,6 +10,8 @@ type PasswordInputProps = {
   register: UseFormRegisterReturn;
   error?: string;
   className?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const PasswordInput = ({
@@ -18,6 +19,8 @@ export const PasswordInput = ({
   register,
   error,
   className = "",
+  value,
+  onChange,
 }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,22 +31,31 @@ export const PasswordInput = ({
         {...register}
         type={showPassword ? "text" : "password"}
         placeholder=" "
-        className={cn("peer form-control pr-12 bg-transparent", error && "is-invalid")}
+        value={value}
+        onChange={(e) => {
+          register.onChange(e);
+          onChange?.(e);
+        }}
+        className={cn(
+          "peer form-control pr-12 bg-transparent",
+          error && "is-invalid"
+        )}
       />
 
       {/* FLOATING LABEL */}
       <label
         htmlFor={register.name}
         className={cn(
-          "absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 px-1 pointer-events-none transition-all duration-200 bg-transparent",
-          "peer-focus:top-0 peer-focus:text-xs peer-focus:-translate-y-0",
-          "peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:-translate-y-0"
+          "absolute left-4 px-1 pointer-events-none transition-all duration-200 bg-[#F9F9F9]",
+          "top-1/2 -translate-y-1/2 text-gray-400",
+          "peer-focus:-top-2 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-gray-700",
+          "peer-not-placeholder-shown:-top-2 peer-not-placeholder-shown:translate-y-0 peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-700"
         )}
       >
         {label}
       </label>
 
-      {/* EYE TOGGLE */}
+      {/* PASSWORD TOGGLE */}
       <button
         type="button"
         onClick={() => setShowPassword((v) => !v)}

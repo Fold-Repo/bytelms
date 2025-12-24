@@ -52,7 +52,7 @@ const PopupModal = ({
           )}
 
           {/* BODY */}
-          <ModalBody className="p-0 space-y-5">
+          <ModalBody className="p-0 space-y-5  ">
             {/* EMAIL SECTION */}
             {email && (
               <div className="rounded-lg bg-[#FAFAFC] p-4 flex items-center justify-between">
