@@ -358,6 +358,15 @@ export const SignUpPage = () => {
           </Link>
         </div>
       </form>
+      {/* FOOTER */}
+      <footer className="text-center text-sm font-sans font-normal text-[#BDBDBD] space-y-2 mt-20">
+        <div className="flex justify-center items-center gap-4">
+          <h2>Terms & Condition</h2>
+          <div className="h-5 w-px bg-gray-400"></div>
+          <h2>Privacy Policy</h2>
+        </div>
+        <p>Copyright © 2025 Apple Inc. All rights reserved.</p>
+      </footer>
     </div>
   );
 };
