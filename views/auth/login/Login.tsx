@@ -11,6 +11,8 @@ import { useForm } from "react-hook-form";
 import { PasswordInput } from "../../../components/PasswordInput";
 import { toast } from "react-toastify";
 import { AuthToast } from "@/components/AuthToast";
+import { Controller } from "react-hook-form";
+
 
 // Validation schema
 const loginSchema = yup.object({
@@ -108,7 +110,7 @@ export const Login = () => {
       {/* Google Button */}
       <Button
         onPress={handleGoogleSignIn}
-        className="w-full flex items-center justify-center gap-3 border py-4 rounded-full"
+        className="w-full mx-auto flex items-center justify-center gap-3 bg-transparent border-2 border-gray-200 py-4 rounded-full font-medium font-sans text-lg"
       >
         <FcGoogle className="w-6 h-6" />
         Continue with Google
@@ -144,7 +146,7 @@ export const Login = () => {
 
         <div className="flex justify-end">
           <Link
-            href="/forgetPassword"
+            href="/forgetpassword"
             className="text-sm text-blue-600 hover:underline"
           >
             Forgot password?
@@ -168,6 +170,15 @@ export const Login = () => {
           </Link>
         </div>
       </form>
+      {/* FOOTER */}
+      <footer className="text-center text-sm font-sans font-normal text-[#BDBDBD] space-y-2 mt-20">
+        <div className="flex justify-center items-center gap-4">
+          <h2>Terms & Condition</h2>
+          <div className="h-5 w-px bg-gray-400"></div>
+          <h2>Privacy Policy</h2>
+        </div>
+        <p>Copyright © 2025 Apple Inc. All rights reserved.</p>
+      </footer>
     </div>
   );
 };
