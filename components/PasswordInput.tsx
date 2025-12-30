@@ -3,11 +3,13 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib";
+import { UseFormRegisterReturn  } from "react-hook-form"
 
 type PasswordInputProps = {
   label: string;
   error?: string;
   className?: string;
+  register?: UseFormRegisterReturn;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export const PasswordInput = ({
@@ -35,7 +37,7 @@ export const PasswordInput = ({
         className={cn(
           "absolute left-4 px-1 pointer-events-none transition-all duration-200",
           "top-1/2 -translate-y-1/2 text-gray-400",
-          "peer-focus:-top-2 peer-focus:text-xs peer-focus:text-gray-700",
+          "peer-focus:-top-1 peer-focus:text-xs peer-focus:text-gray-700",
           "peer-not-placeholder-shown:-top-2 peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-700",
           "bg-[#F9F9F9]"
         )}

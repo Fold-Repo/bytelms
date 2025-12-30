@@ -11,6 +11,8 @@ import { useForm } from "react-hook-form";
 import { PasswordInput } from "../../../components/PasswordInput";
 import { toast } from "react-toastify";
 import { AuthToast } from "@/components/AuthToast";
+import { Controller } from "react-hook-form";
+
 
 // Validation schema
 const loginSchema = yup.object({
